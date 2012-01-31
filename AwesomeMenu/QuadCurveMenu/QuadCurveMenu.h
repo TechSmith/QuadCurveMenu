@@ -8,23 +8,30 @@
 
 #import <UIKit/UIKit.h>
 #import "QuadCurveMenuItem.h"
+#import <QuartzCore/QuartzCore.h>
 
 @protocol QuadCurveMenuDelegate;
 
 @interface QuadCurveMenu : UIView <QuadCurveMenuItemDelegate>
 {
-    NSArray *_menusArray;
-    int _flag;
-    NSTimer *_timer;
-    QuadCurveMenuItem *_addButton;
-    
-    id<QuadCurveMenuDelegate> _delegate;
-
+   NSArray *_menusArray;
+   int _flag;
+   NSTimer *_timer;
+   QuadCurveMenuItem *_addButton;
+   
+   id<QuadCurveMenuDelegate> _delegate;
+   
 }
 @property (nonatomic, copy) NSArray *menusArray;
 @property (nonatomic, getter = isExpanding)     BOOL expanding;
 @property (nonatomic, assign) id<QuadCurveMenuDelegate> delegate;
+@property (nonatomic, assign) CGPoint startPoint;
+@property (nonatomic, assign) BOOL allowTapToClose;
+
 - (id)initWithFrame:(CGRect)frame menus:(NSArray *)aMenusArray;
+-(void)openMenu;
+-(void)closeMenu;
+
 @end
 
 @protocol QuadCurveMenuDelegate <NSObject>
