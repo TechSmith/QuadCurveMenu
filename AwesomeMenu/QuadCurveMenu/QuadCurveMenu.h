@@ -29,8 +29,8 @@
 @property (nonatomic, assign) BOOL allowTapToClose;
 
 - (id)initWithFrame:(CGRect)frame menus:(NSArray *)aMenusArray;
--(void)openMenu;
--(void)closeMenu;
+- (void)openMenu;
+- (void)closeMenu;
 
 @end
 
