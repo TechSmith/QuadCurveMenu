@@ -12,6 +12,12 @@
 
 @protocol QuadCurveMenuDelegate;
 
+typedef enum {
+   QuadCurveExpandMethodCircle,
+   QuadCurveExpandMethodLine,
+   QuadCurveExpandMethodReverseLine,
+} QuadCurveExpandMethod;
+
 @interface QuadCurveMenu : UIView <QuadCurveMenuItemDelegate>
 {
    NSArray *_menusArray;
@@ -27,6 +33,7 @@
 @property (nonatomic, assign) id<QuadCurveMenuDelegate> delegate;
 @property (nonatomic, assign) CGPoint startPoint;
 @property (nonatomic, assign) BOOL allowTapToClose;
+@property (nonatomic, assign) QuadCurveExpandMethod expandMethod;
 
 - (id)initWithFrame:(CGRect)frame menus:(NSArray *)aMenusArray;
 - (void)openMenu;

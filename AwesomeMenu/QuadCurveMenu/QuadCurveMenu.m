@@ -40,6 +40,7 @@ static CGPoint RotateCGPointAroundCenter(CGPoint point, CGPoint center, float an
 @synthesize menusArray = _menusArray;
 @synthesize startPoint = _startPoint;
 @synthesize allowTapToClose = _allowTapToClose;
+@synthesize expandMethod;
 
 #pragma mark - initialization & cleaning up
 - (id)initWithFrame:(CGRect)frame menus:(NSArray *)aMenusArray
@@ -86,6 +87,23 @@ static CGPoint RotateCGPointAroundCenter(CGPoint point, CGPoint center, float an
       }
    }
    
+}
+
+-(void)setExpandMethod:(QuadCurveExpandMethod)newExpandMethod
+{
+   expandMethod = newExpandMethod;
+   int i=0;
+   for( QuadCurveMenuItem *item in _menusArray )
+   {      
+      item.startPoint = self.startPoint;
+      [self adjustMenuItemEndpoint:item count:[_menusArray count] index:i];
+      i++;
+      
+      if( self.isExpanding )
+      {
+         item.center = item.endPoint;
+      }
+   }
 }
 
 - (void)dealloc
@@ -196,14 +214,42 @@ static CGPoint RotateCGPointAroundCenter(CGPoint point, CGPoint center, float an
 
 -(void)adjustMenuItemEndpoint:(QuadCurveMenuItem*)item count:(int)count index:(int)i
 {
-   item.startPoint = self.startPoint;
-   CGPoint endPoint = CGPointMake(self.startPoint.x + ENDRADIUS * sinf(i * MENUWHOLEANGLE / count), self.startPoint.y - ENDRADIUS * cosf(i * MENUWHOLEANGLE / count));
-   item.endPoint = RotateCGPointAroundCenter(endPoint, self.startPoint, ROTATEANGLE);
-   CGPoint nearPoint = CGPointMake(self.startPoint.x + NEARRADIUS * sinf(i * MENUWHOLEANGLE / count), self.startPoint.y - NEARRADIUS * cosf(i * MENUWHOLEANGLE / count));
-   item.nearPoint = RotateCGPointAroundCenter(nearPoint, self.startPoint, ROTATEANGLE);
-   CGPoint farPoint = CGPointMake(self.startPoint.x + FARRADIUS * sinf(i * MENUWHOLEANGLE / count), self.startPoint.y - FARRADIUS * cosf(i * MENUWHOLEANGLE / count));
-   item.farPoint = RotateCGPointAroundCenter(farPoint, self.startPoint, ROTATEANGLE);  
-   item.center = item.startPoint;
+   switch (self.expandMethod) {
+      case QuadCurveExpandMethodReverseLine:
+      {
+         item.startPoint = self.startPoint;
+         CGPoint endPoint = CGPointMake(self.startPoint.x - ( (i + 1) * 44) , self.startPoint.y);
+         item.endPoint = endPoint;
+         item.nearPoint = endPoint;
+         item.farPoint = endPoint;
+         item.center = item.startPoint;
+         break;
+      }
+      case QuadCurveExpandMethodLine:
+      {
+         item.startPoint = self.startPoint;
+         CGPoint endPoint = CGPointMake(self.startPoint.x + ( (i + 1) * 44) , self.startPoint.y);
+         item.endPoint = endPoint;
+         item.nearPoint = endPoint;
+         item.farPoint = endPoint;
+         item.center = item.startPoint;
+         break;
+      }
+      default:
+      case QuadCurveExpandMethodCircle:
+      {
+         item.startPoint = self.startPoint;
+         CGPoint endPoint = CGPointMake(self.startPoint.x + ENDRADIUS * sinf(i * MENUWHOLEANGLE / count), self.startPoint.y - ENDRADIUS * cosf(i * MENUWHOLEANGLE / count));
+         item.endPoint = RotateCGPointAroundCenter(endPoint, self.startPoint, ROTATEANGLE);
+         CGPoint nearPoint = CGPointMake(self.startPoint.x + NEARRADIUS * sinf(i * MENUWHOLEANGLE / count), self.startPoint.y - NEARRADIUS * cosf(i * MENUWHOLEANGLE / count));
+         item.nearPoint = RotateCGPointAroundCenter(nearPoint, self.startPoint, ROTATEANGLE);
+         CGPoint farPoint = CGPointMake(self.startPoint.x + FARRADIUS * sinf(i * MENUWHOLEANGLE / count), self.startPoint.y - FARRADIUS * cosf(i * MENUWHOLEANGLE / count));
+         item.farPoint = RotateCGPointAroundCenter(farPoint, self.startPoint, ROTATEANGLE);  
+         item.center = item.startPoint;
+         break;
+      } 
+   }
+
 }
 
 - (void)setMenusArray:(NSArray *)aMenusArray

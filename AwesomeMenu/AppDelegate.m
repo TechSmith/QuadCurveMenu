@@ -8,6 +8,13 @@
 
 #import "AppDelegate.h"
 
+@interface AppDelegate()
+{
+   QuadCurveMenu * _menu;
+}
+
+@end
+
 @implementation AppDelegate
 
 @synthesize window = _window;
@@ -78,13 +85,30 @@
     [starMenuItem8 release];
     [starMenuItem9 release];
     
-    QuadCurveMenu *menu = [[QuadCurveMenu alloc] initWithFrame:self.window.bounds menus:menus];
-    menu.delegate = self;
-    [self.window addSubview:menu];
-    [menu release];
+   _menu = [[QuadCurveMenu alloc] initWithFrame:self.window.bounds menus:menus];
+   _menu.expandMethod = QuadCurveExpandMethodCircle;
+   _menu.startPoint = CGPointMake(self.window.bounds.size.width / 2.0, self.window.bounds.size.height / 2.0);
+    _menu.delegate = self;
+    [self.window addSubview:_menu];
+    [_menu release];
+   
+   NSArray * items = [NSArray arrayWithObjects:
+                      @"Circle",
+                      @"Line Right",
+                      @"Line Left", nil];
+   UISegmentedControl * typeSelector = [[UISegmentedControl alloc] initWithItems:items];
+   typeSelector.selectedSegmentIndex = _menu.expandMethod;
+   [typeSelector addTarget:self action:@selector(changedLayout:) forControlEvents:UIControlEventValueChanged];
+   [self.window addSubview:typeSelector];
     
     [self.window makeKeyAndVisible];
     return YES;
+}
+
+-(void) changedLayout:(id)sender
+{
+   UISegmentedControl * typeSelector = (UISegmentedControl *) sender;
+   _menu.expandMethod = typeSelector.selectedSegmentIndex;
 }
 
 - (void)quadCurveMenu:(QuadCurveMenu *)menu didSelectIndex:(NSInteger)idx
