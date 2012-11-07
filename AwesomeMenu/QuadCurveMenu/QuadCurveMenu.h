@@ -34,6 +34,7 @@ typedef enum {
 @property (nonatomic, assign) CGPoint startPoint;
 @property (nonatomic, assign) BOOL allowTapToClose;
 @property (nonatomic, assign) QuadCurveExpandMethod expandMethod;
+@property (nonatomic, assign) BOOL hideWhenClosed;
 
 - (id)initWithFrame:(CGRect)frame menus:(NSArray *)aMenusArray;
 - (void)openMenu;

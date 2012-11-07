@@ -301,6 +301,14 @@ static CGPoint RotateCGPointAroundCenter(CGPoint point, CGPoint center, float an
       _addButton.transform = CGAffineTransformMakeRotation(angle);
    }];
    
+   if ( self.hideWhenClosed )
+   {
+      float startDelay = self.isExpanding ? 0.f : 0.35f;
+      [UIView animateWithDuration:0.25 delay:startDelay options:UIViewAnimationCurveEaseIn animations:^{
+         self.alpha = self.isExpanding ? 1.f : 0.f;
+      } completion:nil];
+   }
+   
    // expand or close animation
    if (!_timer) 
    {
