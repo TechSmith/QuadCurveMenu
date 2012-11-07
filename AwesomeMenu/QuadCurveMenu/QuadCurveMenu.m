@@ -199,11 +199,8 @@ static CGPoint RotateCGPointAroundCenter(CGPoint point, CGPoint center, float an
    }
    _expanding = NO;
    
-   // rotate "add" button
-   float angle = self.isExpanding ? -M_PI_4 : 0.0f;
-   [UIView animateWithDuration:0.2f animations:^{
-      _addButton.transform = CGAffineTransformMakeRotation(angle);
-   }];
+   [self rotateAddButton];
+   [self animateHideForPop];
    
    if ([_delegate respondsToSelector:@selector(quadCurveMenu:didSelectIndex:)])
    {
@@ -286,21 +283,8 @@ static CGPoint RotateCGPointAroundCenter(CGPoint point, CGPoint center, float an
    return _expanding;
 }
 
-- (void)setExpanding:(BOOL)expanding
+- (void) animateHideForClose
 {
-   if( _flag != [_menusArray count] && _flag != -1 )
-      return;
-   
-   _expanding = expanding; 
-   
-   
-   
-   // rotate add button
-   float angle = self.isExpanding ? -M_PI_4 : 0.0f;
-   [UIView animateWithDuration:0.2f animations:^{
-      _addButton.transform = CGAffineTransformMakeRotation(angle);
-   }];
-   
    if ( self.hideWhenClosed )
    {
       float startDelay = self.isExpanding ? 0.f : 0.35f;
@@ -308,6 +292,35 @@ static CGPoint RotateCGPointAroundCenter(CGPoint point, CGPoint center, float an
          self.alpha = self.isExpanding ? 1.f : 0.f;
       } completion:nil];
    }
+}
+
+- (void) animateHideForPop
+{
+   if ( self.hideWhenClosed )
+   {
+      [UIView animateWithDuration:0.05 delay:0.25 options:UIViewAnimationCurveEaseIn animations:^{
+         self.alpha = self.isExpanding ? 1.f : 0.f;
+      } completion:nil];
+   }
+}
+
+-(void) rotateAddButton
+{
+   float angle = self.isExpanding ? -M_PI_4 : 0.0f;
+   [UIView animateWithDuration:0.2f animations:^{
+      _addButton.transform = CGAffineTransformMakeRotation(angle);
+   }];
+}
+
+- (void)setExpanding:(BOOL)expanding
+{
+   if( _flag != [_menusArray count] && _flag != -1 )
+      return;
+   
+   _expanding = expanding; 
+   
+   [self rotateAddButton];
+   [self animateHideForClose];
    
    // expand or close animation
    if (!_timer) 
