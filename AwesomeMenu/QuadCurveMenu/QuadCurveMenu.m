@@ -288,7 +288,7 @@ static CGPoint RotateCGPointAroundCenter(CGPoint point, CGPoint center, float an
    if ( self.hideWhenClosed )
    {
       float startDelay = self.isExpanding ? 0.f : 0.35f;
-      [UIView animateWithDuration:0.25 delay:startDelay options:UIViewAnimationCurveEaseIn animations:^{
+      [UIView animateWithDuration:0.25 delay:startDelay options:UIViewAnimationOptionCurveEaseIn animations:^{
          self.alpha = self.isExpanding ? 1.f : 0.f;
       } completion:nil];
    }
@@ -298,7 +298,7 @@ static CGPoint RotateCGPointAroundCenter(CGPoint point, CGPoint center, float an
 {
    if ( self.hideWhenClosed )
    {
-      [UIView animateWithDuration:0.05 delay:0.25 options:UIViewAnimationCurveEaseIn animations:^{
+      [UIView animateWithDuration:0.05 delay:0.25 options:UIViewAnimationOptionCurveEaseIn animations:^{
          self.alpha = self.isExpanding ? 1.f : 0.f;
       } completion:nil];
    }
